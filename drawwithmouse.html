@@ -5,54 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Draw with Mouse</title>
     <style>
+        #canvasContainer {
+            display: flex;
+        }
+
+        #colorPanel {
+            width: 50px;
+            background-color: #f0f0f0;
+            border: 1px solid black;
+        }
+
         canvas {
             border: 1px solid black;
         }
     </style>
 </head>
 <body>
-    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <div id="canvasContainer">
+        <div id="colorPanel">
+            <div class="color" style="background-color: black;"></div>
+            <div class="color" style="background-color: red;"></div>
+            <div class="color" style="background-color: blue;"></div>
+            <div class="color" style="background-color: green;"></div>
+            <div class="color" style="background-color: yellow;"></div>
+            <div class="color" style="background-color: orange;"></div>
+        </div>
+        <canvas id="myCanvas" width="800" height="600"></canvas>
+    </div>
 
     <script>
-        // Récupérer le canvas et son contexte
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
-
-        // Variables pour suivre l'état du dessin
         var painting = false;
 
-        // Fonction pour commencer le dessin
         function startPosition(e) {
             painting = true;
             draw(e);
         }
 
-        // Fonction pour arrêter le dessin
         function endPosition() {
             painting = false;
-            ctx.beginPath(); // Commencer un nouveau chemin
+            ctx.beginPath();
         }
 
-        // Fonction pour dessiner
         function draw(e) {
             if (!painting) return;
             ctx.lineWidth = 5;
             ctx.lineCap = "round";
-            ctx.strokeStyle = "black";
+            ctx.strokeStyle = selectedColor;
 
-            // Récupérer la position de la souris
             var rect = canvas.getBoundingClientRect();
             var x = e.clientX - rect.left;
             var y = e.clientY - rect.top;
 
-            // Dessiner une ligne jusqu'à la position actuelle de la souris
             ctx.lineTo(x, y);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
         }
 
-        // Écouter les événements de la souris
+        var colors = document.getElementsByClassName("color");
+        var selectedColor = "black";
+
+        for (var i = 0; i < colors.length; i++) {
+            colors[i].addEventListener("click", function() {
+                selectedColor = this.style.backgroundColor;
+            });
+        }
+
         canvas.addEventListener("mousedown", startPosition);
         canvas.addEventListener("mouseup", endPosition);
         canvas.addEventListener("mousemove", draw);
