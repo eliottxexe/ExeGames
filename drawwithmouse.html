@@ -12,18 +12,27 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            font-family: Arial, sans-serif;
         }
         canvas {
             border: 1px solid black;
         }
         .controls {
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
         }
         .controls label {
             margin-right: 5px;
         }
         .controls input[type="color"], .controls input[type="range"] {
             margin-right: 10px;
+        }
+        .colors-index {
+            margin-top: 10px;
+        }
+        .colors-index h3 {
+            margin: 0;
         }
     </style>
 </head>
@@ -39,18 +48,18 @@
     </div>
     <canvas id="canvas" width="800" height="600"></canvas>
     <div class="colors-index">
-      <h3>Colors Index : </h3>
+        <h3>Colors Index:</h3>
         <p>Red: #FF0000</p>
-      <p>Green: #00FF00</p>
-      <p>Blue: #0000FF</p>
-      <p>Yellow: #FFFF00</p>
-      <p>Cyan: #00FFFF</p>
-      <p>Magenta: #FF00FF</p>
-      <p>Black: #000000</p>
-      <p>White: #FFFFFF</p>
-      <p>Gray: #808080</p>
-      <p>Orange: #FFA500</p>
-      <p>Pink: #FFC0CB</p>
+        <p>Green: #00FF00</p>
+        <p>Blue: #0000FF</p>
+        <p>Yellow: #FFFF00</p>
+        <p>Cyan: #00FFFF</p>
+        <p>Magenta: #FF00FF</p>
+        <p>Black: #000000</p>
+        <p>White: #FFFFFF</p>
+        <p>Gray: #808080</p>
+        <p>Orange: #FFA500</p>
+        <p>Pink: #FFC0CB</p>
     </div>
     <script>
         const canvas = document.getElementById('canvas');
