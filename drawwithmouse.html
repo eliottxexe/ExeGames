@@ -25,6 +25,21 @@
         canvas {
             border: 1px solid black;
         }
+
+        #sizePanel {
+            width: 60px;
+            background-color: #f0f0f0;
+            border: 1px solid black;
+            margin-left: 10px;
+            padding: 5px;
+        }
+
+        .size {
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -38,12 +53,20 @@
             <img class="color" src="https://via.placeholder.com/30x30.png?text=Orange" alt="Orange" style="background-color: orange;">
         </div>
         <canvas id="myCanvas" width="800" height="600"></canvas>
+        <div id="sizePanel">
+            <div class="size" style="font-size: 10px;">1</div>
+            <div class="size" style="font-size: 15px;">2</div>
+            <div class="size" style="font-size: 20px;">3</div>
+            <div class="size" style="font-size: 25px;">4</div>
+            <div class="size" style="font-size: 30px;">5</div>
+        </div>
     </div>
 
     <script>
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         var painting = false;
+        var brushSize = 5;
 
         function startPosition(e) {
             painting = true;
@@ -57,7 +80,7 @@
 
         function draw(e) {
             if (!painting) return;
-            ctx.lineWidth = 5;
+            ctx.lineWidth = brushSize;
             ctx.lineCap = "round";
             ctx.strokeStyle = selectedColor;
 
@@ -77,6 +100,14 @@
         for (var i = 0; i < colors.length; i++) {
             colors[i].addEventListener("click", function() {
                 selectedColor = this.getAttribute("style").split("background-color: ")[1].split(";")[0];
+            });
+        }
+
+        var sizes = document.getElementsByClassName("size");
+
+        for (var i = 0; i < sizes.length; i++) {
+            sizes[i].addEventListener("click", function() {
+                brushSize = parseInt(this.textContent);
             });
         }
 
