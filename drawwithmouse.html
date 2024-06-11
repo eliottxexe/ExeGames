@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Drawing Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        .controls {
+            margin-bottom: 10px;
+        }
+        .controls label {
+            margin-right: 5px;
+        }
+        .controls input[type="color"], .controls input[type="range"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="colorPicker">Color:</label>
+        <input type="color" id="colorPicker" value="#000000">
+        <label for="sizePicker">Size:</label>
+        <input type="range" id="sizePicker" min="1" max="10" value="1">
+        <button id="eraser">Eraser</button>
+        <button id="undo">Undo</button>
+        <button id="redo">Redo</button>
+    </div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="colors-index">
+      <h3>Colors Index : </h3>
+        <p>Red: #FF0000</p>
+      <p>Green: #00FF00</p>
+      <p>Blue: #0000FF</p>
+      <p>Yellow: #FFFF00</p>
+      <p>Cyan: #00FFFF</p>
+      <p>Magenta: #FF00FF</p>
+      <p>Black: #000000</p>
+      <p>White: #FFFFFF</p>
+      <p>Gray: #808080</p>
+      <p>Orange: #FFA500</p>
+      <p>Pink: #FFC0CB</p>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('colorPicker');
+        const sizePicker = document.getElementById('sizePicker');
+        const eraserButton = document.getElementById('eraser');
+        const undoButton = document.getElementById('undo');
+        const redoButton = document.getElementById('redo');
+
+        let drawing = false;
+        let currentColor = colorPicker.value;
+        let currentSize = sizePicker.value;
+        let isEraser = false;
+        let paths = [];
+        let undonePaths = [];
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        colorPicker.addEventListener('change', (e) => {
+            currentColor = e.target.value;
+            isEraser = false;
+        });
+
+        sizePicker.addEventListener('input', (e) => {
+            currentSize = e.target.value;
+        });
+
+        eraserButton.addEventListener('click', () => {
+            isEraser = true;
+        });
+
+        undoButton.addEventListener('click', undo);
+        redoButton.addEventListener('click', redo);
+
+        function startDrawing(e) {
+            drawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+
+            if (isEraser) {
+                ctx.strokeStyle = 'white';
+            } else {
+                ctx.strokeStyle = currentColor;
+            }
+            ctx.lineWidth = currentSize;
+            ctx.lineCap = 'round';
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+
+            paths.push({
+                x: e.offsetX,
+                y: e.offsetY,
+                color: ctx.strokeStyle,
+                size: ctx.lineWidth,
+                erase: isEraser
+            });
+            undonePaths = [];
+        }
+
+        function stopDrawing() {
+            drawing = false;
+            ctx.closePath();
+        }
+
+        function undo() {
+            if (paths.length > 0) {
+                undonePaths.push(paths.pop());
+                redraw();
+            }
+        }
+
+        function redo() {
+            if (undonePaths.length > 0) {
+                paths.push(undonePaths.pop());
+                redraw();
+            }
+        }
+
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            paths.forEach((path, index) => {
+                if (index === 0 || paths[index - 1].erase !== path.erase || paths[index - 1].size !== path.size) {
+                    ctx.closePath();
+                    ctx.beginPath();
+                    ctx.moveTo(path.x, path.y);
+                }
+                ctx.strokeStyle = path.erase ? 'white' : path.color;
+                ctx.lineWidth = path.size;
+                ctx.lineCap = 'round';
+                ctx.lineTo(path.x, path.y);
+                ctx.stroke();
+            });
+            ctx.closePath();
+        }
+    </script>
+</body>
+</html>
