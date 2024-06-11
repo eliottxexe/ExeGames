@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obby-like Game</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+    <script>
+        // Setup Three.js scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Setup Cannon.js world
+        const world = new CANNON.World();
+        world.gravity.set(0, -9.82, 0);
+        world.broadphase = new CANNON.NaiveBroadphase();
+        world.solver.iterations = 10;
+
+        // Create floor
+        const floorGeometry = new THREE.BoxGeometry(100, 1, 100);
+        const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
+        scene.add(floorMesh);
+        const floorShape = new CANNON.Box(new CANNON.Vec3(50, 0.5, 50));
+        const floorBody = new CANNON.Body({ mass: 0 });
+        floorBody.addShape(floorShape);
+        floorBody.position.set(0, -0.5, 0);
+        world.addBody(floorBody);
+
+        // Create player
+        const playerGeometry = new THREE.BoxGeometry(1, 2, 1);
+        const playerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const playerMesh = new THREE.Mesh(playerGeometry, playerMaterial);
+        scene.add(playerMesh);
+        const playerShape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5));
+        const playerBody = new CANNON.Body({ mass: 1 });
+        playerBody.addShape(playerShape);
+        playerBody.position.set(0, 10, 0);
+        world.addBody(playerBody);
+
+        // Set camera position
+        camera.position.y = 5;
+        camera.position.z = 10;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+
+            // Update physics world
+            world.step(1 / 60);
+
+            // Update player position
+            playerMesh.position.copy(playerBody.position);
+            playerMesh.quaternion.copy(playerBody.quaternion);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
