@@ -30,12 +30,12 @@
 <body>
     <div id="canvasContainer">
         <div id="colorPanel">
-            <div class="color" style="background-color: black;"></div>
-            <div class="color" style="background-color: red;"></div>
-            <div class="color" style="background-color: blue;"></div>
-            <div class="color" style="background-color: green;"></div>
-            <div class="color" style="background-color: yellow;"></div>
-            <div class="color" style="background-color: orange;"></div>
+            <img class="color" src="https://via.placeholder.com/30x30.png?text=Black" alt="Black" style="background-color: black;">
+            <img class="color" src="https://via.placeholder.com/30x30.png?text=Red" alt="Red" style="background-color: red;">
+            <img class="color" src="https://via.placeholder.com/30x30.png?text=Blue" alt="Blue" style="background-color: blue;">
+            <img class="color" src="https://via.placeholder.com/30x30.png?text=Green" alt="Green" style="background-color: green;">
+            <img class="color" src="https://via.placeholder.com/30x30.png?text=Yellow" alt="Yellow" style="background-color: yellow;">
+            <img class="color" src="https://via.placeholder.com/30x30.png?text=Orange" alt="Orange" style="background-color: orange;">
         </div>
         <canvas id="myCanvas" width="800" height="600"></canvas>
     </div>
@@ -76,7 +76,7 @@
 
         for (var i = 0; i < colors.length; i++) {
             colors[i].addEventListener("click", function() {
-                selectedColor = this.style.backgroundColor;
+                selectedColor = this.getAttribute("style").split("background-color: ")[1].split(";")[0];
             });
         }
 
