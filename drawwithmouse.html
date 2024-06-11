@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draw with Mouse</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+
+    <script>
+        // Récupérer le canvas et son contexte
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+
+        // Variables pour suivre l'état du dessin
+        var painting = false;
+
+        // Fonction pour commencer le dessin
+        function startPosition(e) {
+            painting = true;
+            draw(e);
+        }
+
+        // Fonction pour arrêter le dessin
+        function endPosition() {
+            painting = false;
+            ctx.beginPath(); // Commencer un nouveau chemin
+        }
+
+        // Fonction pour dessiner
+        function draw(e) {
+            if (!painting) return;
+            ctx.lineWidth = 5;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "black";
+
+            // Récupérer la position de la souris
+            var rect = canvas.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = e.clientY - rect.top;
+
+            // Dessiner une ligne jusqu'à la position actuelle de la souris
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        // Écouter les événements de la souris
+        canvas.addEventListener("mousedown", startPosition);
+        canvas.addEventListener("mouseup", endPosition);
+        canvas.addEventListener("mousemove", draw);
+    </script>
+</body>
+</html>
