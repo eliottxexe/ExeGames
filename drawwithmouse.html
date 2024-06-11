@@ -22,24 +22,29 @@
             cursor: pointer;
         }
 
-        canvas {
-            border: 1px solid black;
-        }
-
-        #sizePanel {
+        #thicknessPanel {
             width: 60px;
             background-color: #f0f0f0;
             border: 1px solid black;
-            margin-left: 10px;
-            padding: 5px;
+            margin-top: 20px;
         }
 
-        .size {
+        .thickness {
             width: 30px;
             height: 30px;
             margin: 5px;
             cursor: pointer;
-        } 
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+
+        .selected {
+            border-color: black;
+        }
+
+        canvas {
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
@@ -52,22 +57,21 @@
             <img class="color" src="https://via.placeholder.com/30x30.png?text=Yellow" alt="Yellow" style="background-color: yellow;">
             <img class="color" src="https://via.placeholder.com/30x30.png?text=Orange" alt="Orange" style="background-color: orange;">
         </div>
-        <canvas id="myCanvas" width="800" height="600"></canvas>
-        <div id="sizePanel">
-            <div class="size" style="font-size: 10px;">1</div>
-            <div class="size" style="font-size: 15px;">2</div>
-            <div class="size" style="font-size: 20px;">3</div>
-            <div class="size" style="font-size: 25px;">4</div>
-            <div class="size" style="font-size: 30px;">5</div>
-            <div class="size" style="font-size: 35px;">6</div>
+        <div id="thicknessPanel">
+            <div class="thickness selected" data-thickness="1"></div>
+            <div class="thickness" data-thickness="3"></div>
+            <div class="thickness" data-thickness="5"></div>
+            <div class="thickness" data-thickness="7"></div>
+            <div class="thickness" data-thickness="10"></div>
         </div>
+        <canvas id="myCanvas" width="800" height="600"></canvas>
     </div>
 
     <script>
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         var painting = false;
-        var brushSize = 5;
+        var selectedThickness = 1;
 
         function startPosition(e) {
             painting = true;
@@ -81,7 +85,7 @@
 
         function draw(e) {
             if (!painting) return;
-            ctx.lineWidth = brushSize;
+            ctx.lineWidth = selectedThickness;
             ctx.lineCap = "round";
             ctx.strokeStyle = selectedColor;
 
@@ -104,11 +108,17 @@
             });
         }
 
-        var sizes = document.getElementsByClassName("size");
+        var thicknesses = document.getElementsByClassName("thickness");
 
-        for (var i = 0; i < sizes.length; i+2) {
-            sizes[i].addEventListener("click", function() {
-                brushSize = parseInt(this.textContent);
+        for (var i = 0; i < thicknesses.length; i++) {
+            thicknesses[i].addEventListener("click", function() {
+                selectedThickness = parseInt(this.getAttribute("data-thickness"));
+                // Remove 'selected' class from all thickness elements
+                for (var j = 0; j < thicknesses.length; j++) {
+                    thicknesses[j].classList.remove("selected");
+                }
+                // Add 'selected' class to the clicked thickness element
+                this.classList.add("selected");
             });
         }
 
