@@ -17,6 +17,7 @@ const pipeWidth = 70;
 const pipeGap = 150;
 let score = 0;
 let gameRunning = true;
+let restartTimeout = null;
 
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
@@ -86,6 +87,9 @@ function updatePipes() {
         if (bird.x < pipe.x + pipe.width && bird.x + bird.width > pipe.x) {
             if (bird.y < pipe.top || bird.y + bird.height > pipe.bottom) {
                 gameRunning = false;
+                if (!restartTimeout) {
+                    restartTimeout = setTimeout(restartGame, 3000);
+                }
             }
         }
     });
@@ -99,6 +103,17 @@ function drawScore() {
     ctx.fillStyle = 'white';
     ctx.font = '20px Arial';
     ctx.fillText(`Score: ${score}`, 10, 20);
+}
+
+function restartGame() {
+    bird.x = 100;
+    bird.y = canvas.height / 2;
+    bird.velocity = 0;
+    pipes.length = 0;
+    score = 0;
+    gameRunning = true;
+    restartTimeout = null;
+    gameLoop();
 }
 
 function gameLoop() {
