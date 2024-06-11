@@ -3,97 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exe Games | Classic Parkour</title>
+    <title>Exe Games | Classic Parkour 3D</title>
     <style>
-        body { margin: 0; }
-        canvas { display: block; }
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <canvas id="canvas"></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
     <script>
-        // Setup Three.js scene
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
+
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("canvas") });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
 
-        // Setup Cannon.js world
-        const world = new CANNON.World();
-        world.gravity.set(0, -9.82, 0);
-        world.broadphase = new CANNON.NaiveBroadphase();
-        world.solver.iterations = 10;
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
 
-        // Create floor
-        const floorGeometry = new THREE.BoxGeometry(100, 1, 100);
-        const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
-        scene.add(floorMesh);
-        const floorShape = new CANNON.Box(new CANNON.Vec3(50, 0.5, 50));
-        const floorBody = new CANNON.Body({ mass: 0 });
-        floorBody.addShape(floorShape);
-        floorBody.position.set(0, -0.5, 0);
-        world.addBody(floorBody);
+        camera.position.z = 5;
 
-        // Create player
-        const playerGeometry = new THREE.BoxGeometry(1, 2, 1);
-        const playerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const playerMesh = new THREE.Mesh(playerGeometry, playerMaterial);
-        scene.add(playerMesh);
-        const playerShape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5));
-        const playerBody = new CANNON.Body({ mass: 1 });
-        playerBody.addShape(playerShape);
-        playerBody.position.set(0, 10, 0);
-        world.addBody(playerBody);
+        const moveSpeed = 0.1;
 
-        // Create obstacles (platforms)
-        const obstacleGeometry = new THREE.BoxGeometry(3, 1, 3);
-        const obstacleMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
-        const obstacleMesh1 = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
-        obstacleMesh1.position.set(0, 3, -10);
-        scene.add(obstacleMesh1);
-        const obstacleMesh2 = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
-        obstacleMesh2.position.set(10, 5, 0);
-        scene.add(obstacleMesh2);
-        const obstacleMesh3 = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
-        obstacleMesh3.position.set(-10, 7, 0);
-        scene.add(obstacleMesh3);
-
-        // Create obstacle bodies
-        const obstacleShape = new CANNON.Box(new CANNON.Vec3(1.5, 0.5, 1.5));
-        const obstacleBody1 = new CANNON.Body({ mass: 0 });
-        obstacleBody1.addShape(obstacleShape);
-        obstacleBody1.position.set(0, 3, -10);
-        world.addBody(obstacleBody1);
-        const obstacleBody2 = new CANNON.Body({ mass: 0 });
-        obstacleBody2.addShape(obstacleShape);
-        obstacleBody2.position.set(10, 5, 0);
-        world.addBody(obstacleBody2);
-        const obstacleBody3 = new CANNON.Body({ mass: 0 });
-        obstacleBody3.addShape(obstacleShape);
-        obstacleBody3.position.set(-10, 7, 0);
-        world.addBody(obstacleBody3);
-
-        // Set camera position
-        camera.position.y = 5;
-        camera.position.z = 10;
-
-        // Animation loop
         function animate() {
             requestAnimationFrame(animate);
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
             renderer.render(scene, camera);
-
-            // Update physics world
-            world.step(1 / 60);
-
-            // Update player position
-            playerMesh.position.copy(playerBody.position);
-            playerMesh.quaternion.copy(playerBody.quaternion);
         }
 
         animate();
+
+        const keyState = {};
+        document.addEventListener('keydown', (e) => {
+            keyState[e.code] = true;
+        });
+        document.addEventListener('keyup', (e) => {
+            keyState[e.code] = false;
+        });
+
+        function moveCube() {
+            if (keyState['KeyW']) {
+                cube.position.z -= moveSpeed;
+            }
+            if (keyState['KeyS']) {
+                cube.position.z += moveSpeed;
+            }
+            if (keyState['KeyA']) {
+                cube.position.x -= moveSpeed;
+            }
+            if (keyState['KeyD']) {
+                cube.position.x += moveSpeed;
+            }
+        }
+
+        function render() {
+            requestAnimationFrame(render);
+            moveCube();
+            renderer.render(scene, camera);
+        }
+
+        render();
     </script>
 </body>
 </html>
