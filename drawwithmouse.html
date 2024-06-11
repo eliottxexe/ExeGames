@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Drawing Game</title>
+    <title>Draw With Mouse</title>
     <style>
         body {
             display: flex;
@@ -38,6 +38,7 @@
 </head>
 <body>
     <canvas id="canvas" width="800" height="600"></canvas>
+    <br>
     <div class="controls">
         <label for="colorPicker">Color:</label>
         <input type="color" id="colorPicker" value="#000000">
@@ -46,20 +47,6 @@
         <button id="eraser">Eraser</button>
         <button id="undo">Undo</button>
         <button id="redo">Redo</button>
-    </div>
-    <div class="colors-index">
-        <h3>Colors Index:</h3>
-        <p>Red: #FF0000</p>
-        <p>Green: #00FF00</p>
-        <p>Blue: #0000FF</p>
-        <p>Yellow: #FFFF00</p>
-        <p>Cyan: #00FFFF</p>
-        <p>Magenta: #FF00FF</p>
-        <p>Black: #000000</p>
-        <p>White: #FFFFFF</p>
-        <p>Gray: #808080</p>
-        <p>Orange: #FFA500</p>
-        <p>Pink: #FFC0CB</p>
     </div>
     <script>
         const canvas = document.getElementById('canvas');
