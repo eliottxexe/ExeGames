@@ -23,6 +23,11 @@ body {
 #sushi {
     width: 100px;
     cursor: pointer;
+    transition: 1.5s;
+}
+
+#sushi:hover {
+    scale: 1.5;
 }
 
 button {
