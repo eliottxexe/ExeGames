@@ -12,6 +12,14 @@ header {
     background-color: rgb(151, 11, 11);
 }
 
+#link {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    background-color: rgb(151, 11, 11);
+}
+
 main {
     margin-top: 30px;
     background-color: rgb(151, 11, 11);
