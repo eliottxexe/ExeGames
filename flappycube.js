@@ -8,7 +8,7 @@ const bird = {
     height: 40,
     color: 'yellow',
     gravity: 1.15,
-    lift: -6,
+    lift: -8,
     velocity: 0
 };
 
