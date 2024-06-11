@@ -106,7 +106,7 @@
 
         var sizes = document.getElementsByClassName("size");
 
-        for (var i = 0; i < sizes.length; i++) {
+        for (var i = 0; i < sizes.length; i+2) {
             sizes[i].addEventListener("click", function() {
                 brushSize = parseInt(this.textContent);
             });
