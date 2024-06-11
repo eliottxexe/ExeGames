@@ -18,7 +18,7 @@
             border: 1px solid black;
         }
         .controls {
-            margin-bottom: 10px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
         }
@@ -37,6 +37,7 @@
     </style>
 </head>
 <body>
+    <canvas id="canvas" width="800" height="600"></canvas>
     <div class="controls">
         <label for="colorPicker">Color:</label>
         <input type="color" id="colorPicker" value="#000000">
@@ -46,7 +47,6 @@
         <button id="undo">Undo</button>
         <button id="redo">Redo</button>
     </div>
-    <canvas id="canvas" width="800" height="600"></canvas>
     <div class="colors-index">
         <h3>Colors Index:</h3>
         <p>Red: #FF0000</p>
