@@ -17,24 +17,10 @@
         canvas {
             border: 1px solid #fff;
         }
-
-        .button-container {
-            margin-top: 20px;
-        }
-
-        .button-container button {
-            margin-right: 10px;
-            font-size: 16px;
-            padding: 10px;
-        }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div class="button-container">
-        <button onclick="activateNormalMode()">Normal Mode</button>
-        <button onclick="activateReverseXMode()">Reverse-X Mode</button>
-    </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -56,7 +42,6 @@
         let score = 0;
         let gameRunning = true;
         let restartTimeout = null;
-        let reverseX = false;
 
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
@@ -100,15 +85,11 @@
             }
 
             update() {
-                if (!reverseX) {
-                    this.x -= 5;
-                } else {
-                    this.x += 5;
-                }
+                this.x -= 5;
             }
 
             offScreen() {
-                return (reverseX && this.x > canvas.width + this.width) || (!reverseX && this.x < -this.width);
+                return this.x < -this.width;
             }
         }
 
@@ -176,16 +157,6 @@
                 ctx.font = '30px Arial';
                 ctx.fillText(`Score: ${score}`, canvas.width / 2 - 50, canvas.height / 2 + 50);
             }
-        }
-
-        function activateNormalMode() {
-            reverseX = false;
-            restartGame();
-        }
-
-        function activateReverseXMode() {
-            reverseX = true;
-            restartGame();
         }
 
         gameLoop();
